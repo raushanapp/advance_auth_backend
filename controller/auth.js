@@ -8,10 +8,7 @@ exports.register = async(req, res, next) => {
             email,
             password,
         });
-        res.status(201).json({
-            success: true,
-            user
-        });
+        sendToken(user, 201, res);
     } catch (err) {
         next(err);
     }
@@ -27,9 +24,9 @@ exports.login = async (req, res, next) => {
         const user = await User.findOne({ email }).select("+password");    // select password and match the password through methods matchpassword
         if (!user) return next(new ErrorResponse("Invalid credentials",401 ));
         const isMatch = await user.matchPassword(password);
-        if (!isMatch) return next(new ErrorResponse("Invalid credentials",401));
-
-        res.status(200).json({success:true,token:"fdhjfa123snb"})
+        if (!isMatch) return next(new ErrorResponse("Invalid credentials", 401));
+        
+        sendToken(user, 200, res);
     } catch (err) {
        next(err);
     }
@@ -42,3 +39,11 @@ exports.forgotpassword = (req, res, next) => {
 exports.resetpassword = (req, res, next) => {
     res.send("Resetpassword router");
 };
+
+const sendToken = (user, statusCode, res) => {
+    const token = user.getSignedToken();
+    res.status(statusCode).json({
+        sucess: true,
+        token
+    })
+}
