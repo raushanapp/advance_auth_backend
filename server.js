@@ -8,7 +8,10 @@ connectDB();
 const app = express();
 app.use(express.json());
 
+// route method process
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/private", require("./routes/private"));
+
 
 // errorhandle should be last error handler
 app.use(errorHandler);

@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -44,6 +45,10 @@ UserSchema.methods.matchPassword = async function (password) {
 UserSchema.methods.getSignedToken = function () {
       return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY,
             { expiresIn: process.env.JWT_EXPIRE });
+};
+
+UserSchema.methods.getResetPasswordToken = function () {
+      
 }
 
 const User = mongoose.model("User", UserSchema);
